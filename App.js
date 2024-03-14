@@ -4,9 +4,27 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
 import LoginScreen from './App/Screen/LoginScreen/LoginScreen';
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import * as SecureStore from "expo-secure-store";
 
 
 SplashScreen.preventAutoHideAsync();
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'outfit': require('./assets/fonts/Outfit-Regular.ttf'),
@@ -25,10 +43,21 @@ export default function App() {
   }
   
   return (
+    
+    <ClerkProvider
+    tokenCache={tokenCache}
+    publishableKey={'pk_test_Ymxlc3NlZC1tdXR0LTY4LmNsZXJrLmFjY291bnRzLmRldiQ'}>
     <View style={styles.container} onLayout={onLayoutRootView}>
-      <LoginScreen />
+    <SignedIn>
+          <Text>You are Signed in</Text>
+    </SignedIn>
+          <SignedOut>
+        <LoginScreen/>
+    </SignedOut>
+
       <StatusBar style="auto" />
     </View>
+    </ClerkProvider>
   );
 }
 
