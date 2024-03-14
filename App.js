@@ -6,6 +6,8 @@ import { useCallback } from 'react';
 import LoginScreen from './App/Screen/LoginScreen/LoginScreen';
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import * as SecureStore from "expo-secure-store";
+import { NavigationContainer } from '@react-navigation/native';
+import TabNavigations from './App/Navigations/TabNavigations';
 
 
 SplashScreen.preventAutoHideAsync();
@@ -49,7 +51,9 @@ export default function App() {
     publishableKey={'pk_test_Ymxlc3NlZC1tdXR0LTY4LmNsZXJrLmFjY291bnRzLmRldiQ'}>
     <View style={styles.container} onLayout={onLayoutRootView}>
     <SignedIn>
-          <Text>You are Signed in</Text>
+          <NavigationContainer>
+            <TabNavigations />
+          </NavigationContainer>
     </SignedIn>
           <SignedOut>
         <LoginScreen/>
